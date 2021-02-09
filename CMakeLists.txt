@@ -14,6 +14,8 @@ set(BOARD_UC STM32F429I-Discovery)
 set(BOARD_LC stm32f429i_discovery)
 set(BSP_BASE ${BOARD_LC})
 
+set(OCDFLAGS    -f board/stm32f429discovery.cfg)
+
 # MCU family and type in various capitalizations o_O
 set(MCU_FAMILY      stm32f4xx)
 set(MCU_FAMILY_UC   STM32F4xx)
@@ -77,9 +79,9 @@ target_compile_options(${EXECUTABLE}
             ${MCU_LIBS_FLAGS}
             ${MCU_DATA_SECTION_FLAGS}
             -Wall 
-            -g 
             -std=c99 
             -Os
+            -g
             -D${MCU_MC} 
             -DUSE_HAL_DRIVER 
             -DUSE_DBPRINTF
@@ -115,3 +117,16 @@ add_custom_command(TARGET ${EXECUTABLE}
         POST_BUILD
             COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE} ${PROJECT_NAME}.bin
         )
+
+# Improve clean target
+set_target_properties(${EXECUTABLE} 
+        PROPERTIES ADDITIONAL_CLEAN_FILES
+            "${PROJECT_NAME}.bin;${PROJECT_NAME}.map"
+        )
+
+# add flash command
+add_custom_target(flash 
+        DEPENDS ${EXECUTABLE}
+            COMMAND openocd -s ${OCD_DIR} ${OCDFLAGS} -c "program ${EXECUTABLE} verify reset"
+        )
+
