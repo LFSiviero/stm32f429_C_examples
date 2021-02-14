@@ -130,3 +130,6 @@ add_custom_target(flash
             COMMAND openocd -s ${OCD_DIR} ${OCDFLAGS} -c "program ${EXECUTABLE} verify reset"
         )
 
+add_custom_target(openocd
+    COMMAND openocd -s ${OCD_DIR} ${OCDFLAGS}
+)

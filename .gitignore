@@ -1,4 +1,3 @@
-.vscode
 obj/*
 dep/*
 build/*
@@ -6,3 +5,5 @@ build/*
 *.elf
 *.lst
 *.map
+.cortex-debug.peripherals.state.json
+.cortex-debug.registers.state.json
